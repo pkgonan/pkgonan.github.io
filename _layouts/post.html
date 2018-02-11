@@ -1,0 +1,101 @@
+---
+layout: default
+disqus: false
+class: 'post-template'
+---
+<!-- < default -->
+<!-- #post -->
+<header class="main-header post-head"
+        style="background-image: url({% if page.cover %}{{ page.cover }}{% else %}{{ site.cover }}{% endif %})">
+    {% include nav.html %}
+</header>
+
+<main class="content" role="main">
+    <article class="{{ page.subclass }}">
+        <header class="post-header">
+            <h1 class="post-title">{{ page.title }}</h1>
+            <section class="post-meta">
+            {% for category in page.categories %}              
+                {% if site.data.authors[category].image %}<img class="author-thumb" src="{{ site.data.authors[category].image }}" alt="Author image" nopin="nopin" />{% endif %}
+                {% if site.data.authors[category].nickname %}{{ site.data.authors[category].nickname }}{% else %}Unknown Author{% endif %}
+                <script>ga('send', 'pageview', {
+                'dimension1': '{{ page.title }}',
+                'dimension2': '{{ site.data.authors[category].nickname }}'});</script>    
+            {% endfor %}            
+            <time class="post-date" datetime="{{ page.date | date:'%Y-%m-%d' }}">{{ page.date | date_to_string }}</time>
+            </section>
+        </header>
+
+        <!-- 컨텐츠 내용 -->
+        <section class="post-content">    
+        {{ content }}
+        </section>
+
+        <!-- #DONE 태그 위치 이동 -->
+        {% if page.tags.size > 0 %}
+        <section class="post-meta">
+            <div class="icon-tag">
+            {% for tag in page.tags %}
+                {% if forloop.index == page.tags.size %}
+                    {{ tag | capitalize }}
+                {% else %}
+                    {{ tag | capitalize }},
+                {% endif %}   
+            {% endfor %}
+            </div>    
+            {% endif %}
+        </section>
+
+        <!-- #DONE 글쓴이 메타정보 영역 출력-->
+        <footer class="post-footer">
+            {% for category in page.categories  %}              
+            <figure class="author-image">
+                <a class="img" style="background-image: url({{ site.data.authors[category].image }})"><span class="hidden">{{ category }}'s Picture</span></a>
+            </figure>
+            {% endfor %}
+
+            <section class="author">
+            {% for category in page.categories  %}              
+                <h4>{{ site.data.authors[category].nickname }}</h4>
+                <div class="author-meta">
+                {% if site.data.authors[category].position %}
+                    <span class="author-position icon-position">
+                        {{ site.data.authors[category].position }}
+                    </span>
+                {% endif %} 
+                </div>
+                {% if site.data.authors[category].bio %}
+                    <p> {{ site.data.authors[category].bio }}</p>
+                {% endif %}
+                
+            {% endfor %}
+            </section>
+            <!-- /author  -->            
+        </footer>
+        {% if site.facebook %}
+            {% include fb_comment.html %}
+        {% endif %}
+    </article>
+</main>
+
+<aside class="read-next">
+    {{ post.url | remove: '/' }}
+    {% if page.next %}
+        <a class="read-next-story" style="background-image: url({% if page.next.cover %}{{ page.next.cover }}{% else %}{{ site.cover }}{% endif %})" href="{{ page.next.url }}">
+            <section class="post">
+                <h2>{{ page.next.title }}</h2>
+                <p>{{ page.next.content | strip_html | truncatewords:15 }}</p>
+            </section>
+        </a>
+    {% endif %}
+    {% if page.previous %}
+        <a class="read-next-story prev" style="background-image: url({% if page.previous.cover %}{{ page.previous.cover }}{% else %}{{ site.cover }}{% endif %})" href="{{ page.previous.url }}">
+            <section class="post">
+                <h2>{{ page.previous.title }}</h2>
+                <p>{{ page.previous.content | strip_html | truncatewords:15 }}</p>
+            </section>
+        </a>
+    {% endif %}
+</aside>
+
+<!-- /post -->

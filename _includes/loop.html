@@ -1,0 +1,40 @@
+    <!-- Previous/next page links - only displayed on page 2+ -->
+    <div class="extra-pagination inner">
+        {% if page.class == 'author-template' %}
+            {% include author_pagination.html %}
+        {% elsif page.class == 'tag-template' %}
+            {% include tag_pagination.html %}
+        {% else %}
+            {% include post_pagination.html %}
+        {% endif %}
+    </div>
+
+    <!-- This is the post loop - each post will be output using this markup -->
+    {% for post in paginator.posts %}
+    <article class="post">
+        <header class="post-header">
+            <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
+        </header>
+        <section class="post-excerpt">
+            <p>{{ post.content | strip_html | truncatewords: 32 }} </p>
+        </section>
+        
+        <!-- #Done 멀티사용자의 프로필 조회하는 로직-->
+        <footer class="post-meta">
+            {% for category in post.categories  %}  
+            {% if site.data.authors[category].image %}<img class="author-thumb" src="{{ site.data.authors[category].image }}" alt="Author image" nopin="nopin" />{% endif %}
+            {{ site.data.authors[category].nickname }}
+            {% endfor %}
+            <time class="post-date" datetime="{{ post.date | date:'%Y-%m-%d' }}">{{ post.date | date_to_string }}</time>
+        </footer>
+    </article>
+    {% endfor %}
+
+    <!-- Previous/next page links - displayed on every page -->
+    {% if page.class == 'author-template' %}
+        {% include author_pagination.html %}
+    {% elsif page.class == 'tag-template' %}
+        {% include tag_pagination.html %}
+    {% else %}
+        {% include post_pagination.html %}
+    {% endif %}

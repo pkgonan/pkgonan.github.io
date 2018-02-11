@@ -1,0 +1,33 @@
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
+    <!-- <meta name="referrer" content="origin" /> -->
+    <link rel="next" href="/page2/" />
+
+    <meta property="fb:app_id" content="584053091984754" />
+    <meta property="og:site_name" content="{{ site.name }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{site.name}} - {{site.title}}{% endif %}" />
+    <meta property="og:description" content="{% if post.content %}{{ post.content | strip_html | truncatewords: 32 }}{% else %}{{ site.description }}{% endif %}" /> 
+    <meta property="og:url" content="{{ site.url }}{{ page.url }}" />
+    <meta property="og:image" content="{{ site.url }}{% if page.url != '/' and page.cover %}{{ page.cover }}{% else %}{{ site.shared }}{% endif %}" />
+    <meta property="og:image:url" content="{{ site.url }}{% if page.url != '/' and page.cover %}{{ page.cover }}{% else %}{{ site.shared }}{% endif %}" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@devyanolja">
+    <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {{site.name}}{% else %}{{site.name}} - {{site.title}}{% endif %}" />
+    <meta name="twitter:description" content="{% if post.content %}{{ post.content | strip_html | truncatewords: 32 }}{% else %}{{ site.description }}{% endif %}" />
+    <meta name="twitter:url" content="{{ site.url }}{{ page.url }}" />
+    <meta name="twitter:image" content="{{ site.url }}{% if page.url != '/' and page.cover %}{{ page.cover }}{% else %}{{ site.shared }}{% endif %}" />
+
+    <script type="application/ld+json">
+    {
+    "@context": "http://schema.org",
+    "@type": "Website",
+    "publisher": "Yanolja R&D",
+    "url": "/",
+    "image": "{{ site.baseurl }}assets/images/yanolja-tumbnail.png",
+    "description": "{% if post.content %}{{ post.content | strip_html | truncatewords: 32 }}{% else %}{{ site.description }}{% endif %}"
+    }
+    </script>
+
+    <meta name="generator" content="Jekyll 3.0.0" />
+    <link rel="alternate" type="application/rss+xml" title="{{ site.name }}" href="{{ site.url }}/feed.xml" />

@@ -1,0 +1,82 @@
+# Jykell configuration
+
+# Filtering Content
+show_drafts: false
+future:      false
+unpublished: false
+
+# Collections
+collections:
+  author:
+    output: true
+    # permalink: /author/:username
+  tag:
+    output: true
+    # permalink: /tag/:tag/
+
+#markdown: redcarpet
+#highlighter: pygments
+markdown: kramdown
+highlighter: rouge
+paginate: 5
+language: 'ko-KR'
+
+# Website info
+name: '김민규 기술블로그'
+title: '기록은 기억을 지배한다'
+description: "경험과 기억을 공유하다"
+
+# include property
+google_analytics: UA-87400434-9
+disqus: username
+facebook : true
+
+# Link policy
+url: https://pkgonan.github.io
+baseurl: /
+permalink: /:year/:month/:title
+# permalink: /author/:username
+# permalink: /tag/:tag
+# edit baseurl to simply '/' if using as your personal page (instead of a project page)
+
+# default images
+cover: '/assets/images/post-default-cover.png'
+logo: '/assets/images/pkgonan-logo.png'
+shared: '/assets/images/post-default-cover.png'
+
+# gems and other configs
+gems: [jekyll-paginate]
+exclude: [vendor]
+
+
+# Settings for builing master branch with travis-ci
+# with jekyll-travis
+
+# Settings for deploy rake task
+# Username and repo of Github repo, e.g.
+# https://github.com/USERNAME/REPO.git
+# username defaults to ENV['GIT_NAME'] used by Travis
+# repo defaults to USERNAME.github.io
+# Branch defaults to "source" for USERNAME.github.io
+# or "master" otherwise
+safe: false
+lsi: false
+username: pkgonan
+repo: pkgonan.github.io
+branch: master
+source: .
+destination: ./_site
+# relative_source: ../
+# destination: ../blog1
+production_url:  https://pkgonan.github.io/
+# source_url:      https://github.com/pkgonan/pkgonan.github.io/
+
+exclude:
+  - README.md
+  - Rakefile
+  - Gemfile
+  - Gemfile.lock
+  - changelog.md
+  - "*.Rmd"
+  - vendor
+  - .travis.yml
