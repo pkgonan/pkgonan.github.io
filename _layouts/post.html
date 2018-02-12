@@ -62,6 +62,9 @@ class: 'post-template'
                     <span class="author-position icon-position">
                         {{ site.data.authors[category].position }}
                     </span>
+                    <a href="{{ site.data.authors[category].github }}"><span class="author-link icon-github">Github</span></a>
+                    <a href="{{ site.data.authors[category].linkedin }}"><span class="author-link icon-linkedin">Linkedin</span></a>
+                    <a href="{{ site.data.authors[category].facebook }}"><span class="author-link icon-facebook">Facebook</span></a>
                 {% endif %} 
                 </div>
                 {% if site.data.authors[category].bio %}

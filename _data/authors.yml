@@ -20,10 +20,10 @@ master: #마스터유저
   image: '/assets/images/authors/master.jpg'
   # url: 'http://www.devalias.net/'
   # short_url: 'devalias.net'
-  # github: 'http://github.com'
+  github: 'http://github.com/pkgonan'
   # twitter: 'http://twitter.com'
-  # linkedin: 'http://linkedin.com'
-  # facebook: 'http://facebook.com'
+  linkedin: 'https://www.linkedin.com/in/민규-김-267655118'
+  facebook: 'https://www.facebook.com/pkgonan'
 
 pkgonan:
   nickname: 'pkgonan'
@@ -31,6 +31,6 @@ pkgonan:
   bio: '자바 & 스프링을 활용한 백엔드 서버 개발에 관심을 가지고 있습니다.'
   position: '서버 개발자'
   image: '/assets/images/authors/pkgonan.jpg'
-  # github: 'http://github.com/pkgonan'
-  # linkedin: 'https://www.linkedin.com/in/민규-김-267655118'
-  # facebook: 'https://www.facebook.com/pkgonan'
+  github: 'http://github.com/pkgonan'
+  linkedin: 'https://www.linkedin.com/in/민규-김-267655118'
+  facebook: 'https://www.facebook.com/pkgonan'
