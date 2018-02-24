@@ -40,9 +40,9 @@ permalink: /:year/:month/:title
 # edit baseurl to simply '/' if using as your personal page (instead of a project page)
 
 # default images
-cover: '/assets/images/post-default-cover.png'
+cover: '/assets/images/cover8.jpg'
 logo: '/assets/images/pkgonan-logo.png'
-shared: '/assets/images/post-default-cover.png'
+shared: '/assets/cover8.jpg'
 
 # gems and other configs
 gems: [jekyll-paginate]
