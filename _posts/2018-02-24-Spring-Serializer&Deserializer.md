@@ -15,12 +15,13 @@ navigation: True
 ## 상세
 * API 서버를 개발하다 보면 JSON Value를 전송하고 이를 커스텀하여 Object로 받아야 할 때가 있다.
 그 반대로 Object를 커스텀하여 JSON Value로 바꿔 전송해야 할 때도 있다.
-* Serializer = Object -> JSON Custom
-* Deserializer = JSON -> Object Custom
+* Serializer = Object -> JSON
+* Deserializer = JSON -> Object
 
 ## 구현
 * StdSerializer를 extends 후 serialize() 메소드를 Override해서 사용한다.
-*     @JsonComponent
+     
+      @JsonComponent
       public class LongToStringSerializer extends StdSerializer<Long> {
         
           @Override
