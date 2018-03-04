@@ -3,7 +3,7 @@ layout: post
 cover: '/assets/images/cover10.jpg'
 title: Spring Custom Serializer 그리고 Deserializer
 date: 2018-02-24 00:00:00
-tags: Java Spring Custom Serializer Deserializer
+tags: Java Spring Serializer Deserializer
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True
