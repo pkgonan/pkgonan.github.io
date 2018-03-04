@@ -1,16 +1,16 @@
 ---
 layout: post
 cover: '/assets/images/cover9.jpg'
-title: Spring Custom AttributeConverter
+title: Spring JPA Custom AttributeConverter
 date: 2018-02-24 00:00:00
-tags: Java Spring AttributeConverter
+tags: Java Spring JPA AttributeConverter
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True
 ---
 
 ## 목적
-* Entity Attribute <-> Database Column 커스텀
+* JPA Entity Attribute <-> Database Column 커스텀
 
 ## 상세
 * JPA를 사용하여 서버를 개발하다 보면 Database에 저장된 값을 Java 프로그램 내부에서 특정 형태로 변환하여 사용하고 싶을 때가 있다.
