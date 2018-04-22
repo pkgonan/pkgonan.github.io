@@ -2,7 +2,7 @@
 layout: post
 cover: '/assets/images/cover9.jpg'
 title: Spring JPA Custom AttributeConverter
-date: 2018-02-24 00:00:00
+date: 2018-03-04 00:00:00
 tags: Java Spring JPA AttributeConverter
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
