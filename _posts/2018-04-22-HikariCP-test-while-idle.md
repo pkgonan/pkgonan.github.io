@@ -208,12 +208,23 @@ Default: 1800000 (30 minutes)
 ![답변](/assets/images/post/hikari_answer.png)
 
 
+
+* 질문2
+![질문2](/assets/images/post/hikari_question2.png)
+
+
+* 답변2
+![답변2](/assets/images/post/hikari_answer2.png)
+
+
 * 답변 요약
     * max_lifetime을 Database의 wait_timeout보다 30초 이상 짧게 주라는 것은 잘못 되었다. 공식 문서 업데이트를 진행하지 않은 것이다.
+    * HikariCP는 DBA를 존중하기 때문에 DBA가 설정한 wait_timeout을 지킨다.
     * HikariCP는 커넥션 풀을 관리하기 위해 HouseKeeper라는 Thread가 30초마다 돌고 있다.
     * HouseKeeper가 30초마다 돌며 커넥션을 종료하였기에, 이전 29.xx초까지의 커넥션들에 대해 유효성 체크가 누락될 수 있어서 30초의 여유를 준 것이다.
     * 현재 방식은, ThreadLocal에서 각각 타이머를 통해 max-lifetime에 도달했는지 체크를 하는 방식으로 변경되었다.
     * `따라서, max-lifetime은 네트워크 통신 등을 감안해서 Database의 wait_timeout으로 부터 2~3초 정도 짧게 주면 된다.`
+    * `커넥션이 사용중일 경우 즉시 종료를 하지 않기에 커넥션이 매우 바쁜 상황을 감안해서 여유있게 준다면 wait_timeout으로 부터 5초정도까지 짧게 주면 된다는 개발자의 추가 답변.`
     
 
 
@@ -287,6 +298,6 @@ Default: 1800000 (30 minutes)
 ## 결론
 * 첫째, HikariCP가 test-while-idle이 없는 것은 커넥션을 계속 들고 있는 방식이 아니기 때문.
 * 둘째, 기본적으로 DBA가 설정한 wait_timeout을 존중하며, 그 설정을 위반하지 않는다.
-* 셋째, maxLifeTime 설정은, wait_timeout 보다 2~3초 짧게 주자.
+* 셋째, maxLifeTime 설정은, wait_timeout 보다 2~3초 짧게 주자. 좀더 여유있게 준다면 5초 정도 짧게 주면 된다.
 * 넷째, maxLifeTime을 무제한으로 한다고 0으로 주게 될 경우, Dead Connection을 참조하는 문제가 발생할 수 있다.
 * 다섯째, 다량의 커넥션이 한번에 종료되며 발생할 수 있는, 가용 커넥션 부족 이슈에 대해 걱정하지 않아도 된다.
