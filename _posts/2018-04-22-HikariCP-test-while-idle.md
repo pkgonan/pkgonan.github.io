@@ -29,14 +29,34 @@ navigation: True
 * HikariCP는 기본적으로 test-while-idle처럼 특정 기간마다 반복적으로 커넥션을 갱신하는 방식이 아니다.
 * 그렇다면 Pool안에 있는 Connection 갱신은 어떻게?
 * 갱신을 하지 않는다. 커넥션 생성 시간이 HikariCP에 설정한 max-lifetime값에 도달하면 가차 없이 종료 된다.
-* 사실 [Dropwizard-HealthChecks](https://github.com/brettwooldridge/HikariCP/wiki/Dropwizard-HealthChecks)를 추가하면 커넥션 갱신을 할 수는 있지만 HikariCP는 기본적으로 커넥션 갱신 방식이 아니기에 추천하지 않는다.
+* 사실 [Dropwizard-HealthChecks](https://github.com/brettwooldridge/HikariCP/wiki/Dropwizard-HealthChecks)를 추가하면 커넥션 갱신을 할 수는 있지만 HikariCP 개발자가 커넥션 갱신 방식을 반대하므로 Dropwizard-HealthChecks를 사용하지 않는 것을 추천한다.
 * HikariCP는 기본적으로 DBA가 설정한 wait_timeout을 존중하며, 그 설정을 위반하지 않는다.
 * Database의 wait_timeout이 60초 일 경우로 예를 들어 보자.
 * max-lifetime값은 네트워크 지연 등을 포함하여 2~3초간의 시간을 뺀 58초 정도로 설정, HikariCP의 ThreadLocal 내부에서 커넥션 유지 시간을 계산한다.
 * Database와 의존 관계를 분리하였기에, 지속적으로 유효성을 체크하지 않아도 되며, 내부적으로 커넥션이 58초가 되었는지 계산하면 된다.
 * 따라서, 매번 Connection.isValid()를 호출하지 않아도 되며 유효성 체크를 건너 뛰며 성능 향상을 발휘할 수 있다.
 * <b>결론적으로 말하자면, 개발자가 지정한, max-lifetime만큼 커넥션을 유지하고, 종료되면 새로 커넥션을 생성하는 사이클이 반복되는 방식이다.
+  
+  
+### HikariCP 개발자는 왜 test-while-idle을 반대할까?
+
+* [커넥션 갱신 기능에 대한 질문 그리고 HikariCP 메인 개발자의 댓글 참조](https://github.com/brettwooldridge/HikariCP/issues/766)
+
+    >HikariCP is opposed to idle connection testing.
     
+    >It generates unnecessary queries to the database, defeats the database configured idle timeouts, takes away control from the network infrastructure team, and does not remove the need for test on borrow.
+
+    >Having said that, it is generally not a great idea to keep individual database connections open for hours. Databases and drivers both track connections internally with sessions, and both have historically been sources of memory leaks. Allowing drivers and the database itself to release session-associated state periodically improves overall stability. HikariCP has a default maxLifetime of 30 minutes.
+    
+    >The cost of replacing a retired connection, due to exceeding idle or lifetime limits, is typically measured in double-digit milliseconds. If a maxLifetime of 30 minutes is considered, and a pool of 20 connections, you are looking at 20 events, several tens of milliseconds each, occurring in a span of 30 minutes, in the background. Finding a measurable impact on the application would be challenging.
+    
+
+* 보기 쉽게 구글 번역기를 돌려본다면
+
+    HikariCP는 유휴 연결 테스트에 반대합니다. 데이터베이스에 대한 불필요한 쿼리를 생성하고, 유휴 시간 제한이 구성된 데이터베이스를 무효화하고, 네트워크 인프라 팀의 통제를 제거하고, 차용시 테스트의 필요성을 제거하지 않습니다.
+    일반적으로 개별 데이터베이스 연결을 몇 시간 동안 열어 두는 것은 좋은 생각이 아닙니다. 데이터베이스와 드라이버는 내부적으로 세션과 연결을 추적하며, 둘 다 역사적으로 메모리 누수의 원인이었습니다. 드라이버와 데이터베이스 자체가 주기적으로 세션 관련 상태를 해제하도록 허용하면 전반적인 안정성이 향상됩니다. HikariCP의 기본 maxLifetime은 30 분입니다.
+    유휴 또는 수명 제한을 초과하여 폐기 된 연결을 교체하는 데 드는 비용은 일반적으로 두 자릿수 밀리 초 단위로 측정됩니다. 30 분의 maxLifetime이 고려되고 20 개의 연결 풀이 있으면 백그라운드에서 20 분의 이벤트가 30 분의 간격으로 각각 수십 밀리 초씩 발생합니다. 응용 프로그램에 측정 가능한 영향을 찾는 것은 어려울 것입니다.
+
     
 ### HikariCP는 어떤 타이밍에 Connection Validation Check를 수행할까?
 
@@ -84,7 +104,7 @@ navigation: True
     }
 
 
-#### 셋째, `ConnectivityHealthCheck를 사용할 경우`
+#### 셋째, `Dropwizard - ConnectivityHealthCheck를 사용할 경우`
 
 
     CodahaleHealthChecker.java
@@ -299,8 +319,8 @@ Default: 1800000 (30 minutes)
 
 ## 결론
 * 첫째, HikariCP가 test-while-idle이 없는 것은 커넥션을 계속 들고 있는 방식이 아니기 때문.
-* 둘째, 사실 억지로 한다면 [Dropwizard-HealthChecks](https://github.com/brettwooldridge/HikariCP/wiki/Dropwizard-HealthChecks)를 추가하여 test-while-idle를 쓸 수는 있다. 하지만 HikariCP에서 추구하는 방식이 아니기에 추천하지 않는다.
+* 둘째, 사실 억지로 한다면 [Dropwizard-HealthChecks](https://github.com/brettwooldridge/HikariCP/wiki/Dropwizard-HealthChecks)를 추가하여 test-while-idle를 쓸 수는 있다. 하지만 HikariCP 개발자가 반대하는 방식이기에 추천하지 않는다.
 * 셋째, 기본적으로 DBA가 설정한 wait_timeout을 존중하며, 그 설정을 위반하지 않는다.
 * 넷째, maxLifeTime 설정은, wait_timeout 보다 2~3초 짧게 주자. 좀더 여유있게 준다면 5초 정도 짧게 주면 된다.
 * 다섯째, maxLifeTime을 무제한으로 한다고 0으로 주게 될 경우, Dead Connection을 참조하는 문제가 발생할 수 있다.
-* 여섯섯째, 다량의 커넥션이 한번에 종료되며 발생할 수 있는, 가용 커넥션 부족 이슈에 대해 걱정하지 않아도 된다.
+* 여섯째, 다량의 커넥션이 한번에 종료되며 발생할 수 있는, 가용 커넥션 부족 이슈에 대해 걱정하지 않아도 된다.
