@@ -14,7 +14,7 @@ navigation: True
 
 ## 배경
 * Spring Boot 2.0을 기점으로 Default DBCP가 Tomcat DBCP -> HikariCP로 바뀌었다.
-* HikariCP Gihub에서 눈을 씻고 찾아봐도 유휴 상태인 Connection을 갱신하는 기능이 보이지 않는다.
+* HikariCP Gihub에서 눈을 씻고 찾아봐도 유휴 상태인 Connection을 갱신하는 기능이 기본 설정에 보이지 않는다.
 * 또한, Pool에 생존할 수 있는 기간인 max-lifetime 설정도 Database의 wait_timeout 설정보다 최소 30초 이상 짧게 줄 것을 권고한다.
 * wait_timeout이 60초 일 경우, max-lifetime은 30초가 될텐데. 30초마다 몇 백개의 커넥션을 맺고 끊는 것을 반복한다면 DB 부하가 클 텐데?
 * 자, HikariCP가 어떻게 동작하는지 알아보자.
@@ -25,9 +25,11 @@ navigation: True
 
 
 ### HikariCP는 test-while-idle 설정이 있는가?
-* 없다. test-while-idle처럼 특정 기간마다 반복적으로 커넥션을 갱신하는 방식이 아니다.
+* 있지만, 기본적으로 제공하지 않으며 추천하지 않는다. 
+* HikariCP는 기본적으로 test-while-idle처럼 특정 기간마다 반복적으로 커넥션을 갱신하는 방식이 아니다.
 * 그렇다면 Pool안에 있는 Connection 갱신은 어떻게?
 * 갱신을 하지 않는다. 커넥션 생성 시간이 HikariCP에 설정한 max-lifetime값에 도달하면 가차 없이 종료 된다.
+* 사실 [Dropwizard-HealthChecks](https://github.com/brettwooldridge/HikariCP/wiki/Dropwizard-HealthChecks)를 추가하면 커넥션 갱신을 할 수는 있지만 HikariCP는 기본적으로 커넥션 갱신 방식이 아니기에 추천하지 않는다.
 * HikariCP는 기본적으로 DBA가 설정한 wait_timeout을 존중하며, 그 설정을 위반하지 않는다.
 * Database의 wait_timeout이 60초 일 경우로 예를 들어 보자.
 * max-lifetime값은 네트워크 지연 등을 포함하여 2~3초간의 시간을 뺀 58초 정도로 설정, HikariCP의 ThreadLocal 내부에서 커넥션 유지 시간을 계산한다.
@@ -297,7 +299,8 @@ Default: 1800000 (30 minutes)
 
 ## 결론
 * 첫째, HikariCP가 test-while-idle이 없는 것은 커넥션을 계속 들고 있는 방식이 아니기 때문.
-* 둘째, 기본적으로 DBA가 설정한 wait_timeout을 존중하며, 그 설정을 위반하지 않는다.
-* 셋째, maxLifeTime 설정은, wait_timeout 보다 2~3초 짧게 주자. 좀더 여유있게 준다면 5초 정도 짧게 주면 된다.
-* 넷째, maxLifeTime을 무제한으로 한다고 0으로 주게 될 경우, Dead Connection을 참조하는 문제가 발생할 수 있다.
-* 다섯째, 다량의 커넥션이 한번에 종료되며 발생할 수 있는, 가용 커넥션 부족 이슈에 대해 걱정하지 않아도 된다.
+* 둘째, 사실 억지로 한다면 [Dropwizard-HealthChecks](https://github.com/brettwooldridge/HikariCP/wiki/Dropwizard-HealthChecks)를 추가하여 test-while-idle를 쓸 수는 있다. 하지만 HikariCP에서 추구하는 방식이 아니기에 추천하지 않는다.
+* 셋째, 기본적으로 DBA가 설정한 wait_timeout을 존중하며, 그 설정을 위반하지 않는다.
+* 넷째, maxLifeTime 설정은, wait_timeout 보다 2~3초 짧게 주자. 좀더 여유있게 준다면 5초 정도 짧게 주면 된다.
+* 다섯째, maxLifeTime을 무제한으로 한다고 0으로 주게 될 경우, Dead Connection을 참조하는 문제가 발생할 수 있다.
+* 여섯섯째, 다량의 커넥션이 한번에 종료되며 발생할 수 있는, 가용 커넥션 부족 이슈에 대해 걱정하지 않아도 된다.
