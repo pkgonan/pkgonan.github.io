@@ -164,6 +164,30 @@ navigation: True
              else
                  return NULL;
          }
+         
+         
+         static struct hostent *file_find_name(const char *name, struct hostent *result,
+         									  char *buf, int bufsize, int *errval)
+         {
+         	char **alias;
+         	FILE *fp = NULL;
+         
+         	pthread_mutex_lock(&host_iterate_lock);
+         	sethostent(0);
+         	while ((result = gethostent_r(result, buf, bufsize, errval)) != NULL) {
+         		/* Check the entry's name and aliases against the given name. */
+         		if (strcasecmp(result->h_name, name) == 0)
+         			break;
+         		for (alias = result->h_aliases; *alias; alias++) {
+         			if (strcasecmp(*alias, name) == 0)
+         				break;
+         		}
+         	}
+         	pthread_mutex_unlock(&host_iterate_lock);
+         	if (!result && errno != ERANGE)
+         		*errval = HOST_NOT_FOUND;
+         	return result;
+         }
         
     
     
@@ -174,7 +198,7 @@ navigation: True
 
 > 즉, DNS 서버에 요청을 보내 정보를 가져오는데 하나도 가져 오지 못할 경우 file_find_name()이 실행된다.
 
-> file_find_name()은 etc/hosts 에 저장된 로컬 호스트 테이블을 뒤지는 작업이다. [file_find_name()가 하는 일](https://nxmnpg.lemoda.net/ko/3/gethostent)
+> file_find_name()은 etc/hosts 에 저장된 로컬 호스트 테이블을 뒤지는 작업이다. 여기서 핵심은 gethostent_r() 메소드이다. [file_find_name()가 하는 일](https://nxmnpg.lemoda.net/ko/3/gethostent)
 
 > 결론, 먼저 etc/resolv.conf에 등록된 DNS 서버를 찾아보고, 없으면 /etc/hosts에 등록된 로컬 호스트 테이블을 찾는다. 
 
@@ -286,10 +310,11 @@ navigation: True
 * 먼저 기본적인 동작은 위에서 설명한 것과 같다.
 * DNS 서버에 요청, 그 결과가 없다면 로컬 호스트 테이블 참조로 동일하다.
 * 그렇다면 차이점은 무엇일까??
-* 첫째, etc/resolv.conf에 등록된 DNS 서버가 Amazon DNS인 AmazonProvidedDNS로 바뀌어 InetAddress 사용시 Amazon DNS 서버로 요청이 전송된다.
+* 첫째, etc/resolv.conf에 등록된 DNS 서버가 Amazon DNS인 AmazonProvidedDNS로 바뀐다.
 * ![etc/resolv.conf에 자동으로 변경된 DNS 설정](/assets/images/post/InetAddress_resolv.conf.png)
 * 둘째, etc/hosts에 자신의 private IP 주소가 등록된다. 
 * ![etc/hosts에 자동으로 변경된 로컬 호스트 테이블 설정](/assets/images/post/InetAddress_hosts.png)
+* 즉, AWS EC2 환경에서 InetAddress를 사용하면 Amazon DNS 서버로 요청이 전송되게 된다.
 
 
 > 이는 모두 AWS에서 `DHCP 옵션 세트를 생성`하고 이를 이용하여 `VPC 환경을 생성`하고 `해당 VPC 환경으로 EC2 인스턴스를 생성`해야 가능하다.
