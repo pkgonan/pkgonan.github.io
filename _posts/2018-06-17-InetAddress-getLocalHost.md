@@ -42,36 +42,37 @@ navigation: True
 #### InetAddress.java 의 getLocalHost()
 
 
-    public static InetAddress getLocalHost() throws UnknownHostException {
 
-        ...
-            String local = impl.getLocalHostName();
-
+        public static InetAddress getLocalHost() throws UnknownHostException {
+    
             ...
-
-            InetAddress ret = null;
-            synchronized (cacheLock) {
-                long now = System.currentTimeMillis();
-                if (cachedLocalHost != null) {
-                    if ((now - cacheTime) < maxCacheTime) // Less than 5s old?
-                        ret = cachedLocalHost;
-                    else
-                        cachedLocalHost = null;
-                }
-
+                String local = impl.getLocalHostName();
+    
                 ...
-                if (ret == null) {
-                    InetAddress[] localAddrs;
-                    try {
-                        localAddrs = InetAddress.getAddressesFromNameService(local, null);
-                    } catch (UnknownHostException uhe) {
+    
+                InetAddress ret = null;
+                synchronized (cacheLock) {
+                    long now = System.currentTimeMillis();
+                    if (cachedLocalHost != null) {
+                        if ((now - cacheTime) < maxCacheTime) // Less than 5s old?
+                            ret = cachedLocalHost;
+                        else
+                            cachedLocalHost = null;
+                    }
+    
+                    ...
+                    if (ret == null) {
+                        InetAddress[] localAddrs;
+                        try {
+                            localAddrs = InetAddress.getAddressesFromNameService(local, null);
+                        } catch (UnknownHostException uhe) {
+                            ...
+                        }
                         ...
                     }
-                    ...
                 }
-            }
-            ...
-    }
+                ...
+        }
 
 
 
@@ -271,12 +272,12 @@ navigation: True
 
   
   
-* 요약한다면.
+* 요약
 
-    * InetAddress로 IP, 도메인 주소 등을 동적으로 계속해서 가져오는 것은 성능에 치명적이다. 잘 알고 쓰자.
-    * DNS 서버에서 가져온 데이터의 내부 캐시는 5초간만 동작한다.
-    * InetAddress.getLocalHost()를 수행하면 먼저 etc/resolv.conf에 등록된 DNS 서버에 요청을 보낸다.
-    * 이후, 응답값이 없다면 etc/hosts에 저장된 로컬 호스트 테이블을 찾는다.
+* InetAddress로 IP, 도메인 주소 등을 동적으로 계속해서 가져오는 것은 성능에 치명적이다.
+* DNS 서버에서 가져온 데이터의 내부 캐시는 5초간만 동작한다.
+* InetAddress.getLocalHost()를 수행하면 먼저 etc/resolv.conf에 등록된 DNS 서버에 요청을 보낸다.
+* 이후, 응답값이 없다면 etc/hosts에 저장된 로컬 호스트 테이블을 찾는다.
    
 
 
@@ -300,4 +301,4 @@ navigation: True
 
 
 ## 결론
-* InetAddress를 static하게 사용하지 않고, 반복적으로 수행할 경우 성능에 치명적이다.
+* InetAddress를 static하게 사용하지 않고, 반복적으로 수행할 경우 성능에 치명적이다. 알고 쓰자.
