@@ -1,7 +1,7 @@
 ---
 layout: post
 cover: '/assets/images/cover7.jpg'
-title: HikariCP test-while-idle
+title: HikariCP는 test-while-idle 기능이 없을까?
 date: 2018-04-22 00:00:00
 tags: Java Spring Boot HikariCP test-while-idle max-lifetime
 subclass: 'post tag-dev'
