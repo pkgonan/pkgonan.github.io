@@ -15,7 +15,7 @@
 master: #마스터유저
   nickname: 'pkgonan' #author의 root페이지로 사용되는 값입니다. 위의 category와 동일하게 입력한다.
   name: '김민규'
-  bio: '자바 & 스프링을 활용한 백엔드 서버 개발에 관심을 가지고 있습니다.'
+  bio: 'Java 및 Spring을 활용한 서버 개발과 성능 튜닝에 관심이 있습니다. 객체지향 및 테스트 코드 작성을 중요하게 생각하며, 변화에 강한 코드를 작성하고자 노력하고 있습니다.'
   position: '서버 개발자'
   image: '/assets/images/authors/master.jpg'
   # url: 'http://www.devalias.net/'
@@ -28,7 +28,7 @@ master: #마스터유저
 pkgonan:
   nickname: 'pkgonan'
   name: '김민규'
-  bio: '자바 & 스프링을 활용한 백엔드 서버 개발에 관심을 가지고 있습니다.'
+  bio: 'Java 및 Spring을 활용한 서버 개발과 성능 튜닝에 관심이 있습니다. 객체지향 및 테스트 코드 작성을 중요하게 생각하며, 변화에 강한 코드를 작성하고자 노력하고 있습니다.'
   position: '서버 개발자'
   image: '/assets/images/authors/pkgonan.jpg'
   github: 'http://github.com/pkgonan'
