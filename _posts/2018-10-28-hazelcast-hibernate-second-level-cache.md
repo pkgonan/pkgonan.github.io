@@ -3,7 +3,7 @@ layout: post
 cover: '/assets/images/cover10.jpg'
 title: Hazelcast를 구현체로 Hibernate Second Level Cache를 적용하여 API 성능 튜닝하기
 date: 2018-10-28 00:00:00
-tags: Java AWS Beanstalk Hazelcast Hibernate Second Level Cache
+tags: Java AWS Beanstalk Hazelcast Hibernate Second-Level-Cache
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True
