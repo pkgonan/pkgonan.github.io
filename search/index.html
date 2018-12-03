@@ -3,33 +3,29 @@ layout: page
 title: Search
 description: Search by keyword or tag.
 ---
-<form action="get" id="site_search">
-  <center>
-    <strong><a style="font-size:24px">Search:</a></strong>
-    <input style="font-size:20px;" type="text" id="search_box">
-    <input style="font-size:20px;font-weight: bold;" type="submit" value=">">
-  </center>
-</form>
-<br>
-<ul id="search_results"></ul>
-<hr style="background-color: #000; height: 5px;">
-<script src="{{ site.baseurl }}/js/lunr.min.js" charset="utf-8"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="{{ site.baseurl }}/js/search.js" charset="utf-8"></script>
 
-<ul class="tag-box inline"><div class="notepad-index-post-tags" style="">
-  {% assign tags_list = site.tags %}
-  {% if tags_list.first[0] == null %}
-  {% for tag in tags_list %}
-  <a href="#{{ tag }}">{{ tag | capitalize }} <span>{{ site.tags[tag].size }}</span></a>
-  {% endfor %}
-  {% else %}
-  {% for tag in tags_list %}
-  <a href="#{{ tag[0] }}">{{ tag[0] | capitalize }} <span>{{ tag[1].size }}</span></a>
-  {% endfor %}
-  {% endif %}
-  {% assign tags_list = nil %}
-</div></ul>
+<br>
+<form name="search" id="search-form">
+  <div>
+      <!--<i class="icon-search"></i>-->
+      <i class="fa fa-search" style="font-size: 20px;font-weight: bold"></i>
+      <input style="font-size:20px;font-weight: bold;" type="text"  name="q" autocomplete="off" />
+  </div>
+</form>
+
+<hr style="background-color: #000; height: 5px;">
+<script type="text/javascript" src="/assets/js/lunr.min.js" charset="utf-8"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript" src="/assets/js/search.js" charset="utf-8"></script>
+<script type="text/javascript" src="/assets/js/light-jekyll-search.js"></script>
+<script type="text/javascript">
+    lightJekyllSearch.search({
+        el : document.querySelector('form[name="search"] input[name="q"]'),
+        placeholder : '검색어를 입력해주세요.',
+        postJsonPath : '/assets/json/posts.json'
+    });
+</script>
+
 
 {% for tag in site.tags %}
 <h2 id="{{ tag[0] }}">{{ tag[0] | capitalize }}</h2>
