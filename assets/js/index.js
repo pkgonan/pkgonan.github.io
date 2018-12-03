@@ -20,8 +20,6 @@
         //     $("body").toggleClass("nav-opened nav-closed");
         });
 
-    });
-
     // Arctic Scroll by Paul Adam Davis
     // https://github.com/PaulAdamDavis/Arctic-Scroll
     $.fn.arctic_scroll = function (options) {
@@ -51,6 +49,5 @@
                 $htmlBody.stop(true, false).animate({scrollTop: ($(this.hash).offset().top) }, allOptions.speed);
             }
         });
-
     };
 })(jQuery);

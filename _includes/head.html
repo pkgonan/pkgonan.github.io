@@ -24,7 +24,7 @@
     "@type": "Website",
     "publisher": "Yanolja R&D",
     "url": "/",
-    "image": "{{ site.baseurl }}assets/images/yanolja-tumbnail.png",
+    "image": "{{ "/" | relative_url }}assets/images/yanolja-tumbnail.png",
     "description": "{% if post.content %}{{ post.content | strip_html | truncatewords: 32 }}{% else %}{{ site.description }}{% endif %}"
     }
     </script>
