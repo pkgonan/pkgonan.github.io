@@ -52,6 +52,7 @@ navigation: True
 * Hibernate 5.2
 * QueryDSL 4.2
 * Hazelcast 3.10.5
+* MariaDB 10.0.X (InnoDB-5.6.X)
 * AWS Elastic Beanstalk
 
 
