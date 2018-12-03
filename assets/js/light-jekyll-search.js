@@ -34,7 +34,7 @@ var lightJekyllSearch = {
 
             if ( document.getElementById('light-jekyll-search-suggestion') !== null ) {
                 if ( document.getElementById('light-jekyll-search-suggestion').style.display === 'none' ) {
-                    this.enableSuggestion();
+                    self.enableSuggestion();
                 }
             }
             self.suggestion(config.el, self.searchFor(e.target.value, self.posts));
@@ -43,7 +43,9 @@ var lightJekyllSearch = {
         this.innerFunctions.addEvent('keydown', config.el, function(e)
         {
             if ( e.target.value.length === 0 ){
-                self.disableSuggestion();
+                if ( document.getElementById('light-jekyll-search-suggestion') !== null ) {
+                    self.disableSuggestion();
+                }
             }
             if ( document.getElementById('light-jekyll-search-suggestion') !== null ) {
                 if ( document.getElementById('light-jekyll-search-suggestion').style.display === 'none' ) {
@@ -75,7 +77,7 @@ var lightJekyllSearch = {
 
         for ( var i = 0; i < posts.length; i++ ) {
             for ( var key in posts[i] ) {
-                if ( posts[i][key].indexOf(toSearch)!=-1 ) {
+                if ( posts[i][key].toLowerCase().indexOf(toSearch.toLowerCase())!== -1 ) {
                     if ( !this.innerFunctions.itemExists(results, posts[i]) ) {
                         results.push(posts[i]);
                     }
