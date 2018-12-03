@@ -47,12 +47,12 @@ navigation: True
 
 ## 환경
 * JAVA 8
-* Spring Boot 2
-* Spring Data JPA 2
-* Hibernate 5.2
-* QueryDSL 4.2
-* Hazelcast 3.10.5
-* MariaDB 10.0.X (InnoDB-5.6.X)
+* Spring Boot 2.x
+* Spring Data JPA 2.x
+* Hibernate 5.2.x
+* QueryDSL 4.2.x
+* Hazelcast 3.10.x
+* MariaDB 10.0.x (InnoDB-5.6.x)
 * AWS Elastic Beanstalk
 
 

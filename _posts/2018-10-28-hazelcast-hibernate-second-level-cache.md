@@ -22,11 +22,11 @@ navigation: True
 
 ## 환경
 * JAVA 8
-* Spring Boot 2
-* Spring Data JPA 2
-* Hibernate 5.2
-* QueryDSL 4.2
-* Hazelcast 3.10.5
+* Spring Boot 2.x
+* Spring Data JPA 2.x
+* Hibernate 5.2.x
+* QueryDSL 4.2.x
+* Hazelcast 3.10.x
 * AWS Elastic Beanstalk
 
 
