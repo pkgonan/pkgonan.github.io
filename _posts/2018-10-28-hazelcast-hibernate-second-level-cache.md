@@ -337,47 +337,46 @@ navigation: True
           
     * 전략의 구현
         
-            interface MetaCouponCustomRepository {
+            interface TestCouponCustomRepository {
              
-                List<MetaCoupon> findAllByCachedId(Iterable<Long> ids);
+                List<TestCoupon> findAllByCachedId(Iterable<Long> ids);
              
             }
              
              
-            class MetaCouponRepositoryImpl implements MetaCouponCustomRepository {
+            class TestCouponRepositoryImpl implements TestCouponCustomRepository {
              
                 @Autowired
                 private EntityManager entityManager;
              
                 @Autowired
-                private MetaCouponRepository metaCouponRepository;
+                private TestCouponRepository testCouponRepository;
              
                 /**
                  * findAllById Second Level Cache Hit 적용
                  * Second Level Cache에 존재하는 ID는 가져오고, 없는 ID들만 모아서 DB 조회
-                 * PFDV-4333
                  **/
                 @Override
-                public List<MetaCoupon> findAllByCachedId(Iterable<Long> ids) {
-                    List<MetaCoupon> metaCoupons = Lists.newArrayList();
+                public List<TestCoupon> findAllByCachedId(Iterable<Long> ids) {
+                    List<TestCoupon> testCoupons = Lists.newArrayList();
                     List<Long> notExistIds = Lists.newArrayList();
              
                     Cache secondLevelCache = entityManager.getEntityManagerFactory().getCache().unwrap(Cache.class);
                     for (Long id : ids) {
-                        boolean existSecondLevelCache = secondLevelCache.contains(MetaCoupon.class, id);
+                        boolean existSecondLevelCache = secondLevelCache.contains(TestCoupon.class, id);
              
                         if (existSecondLevelCache) {
-                            metaCouponRepository.findById(id).ifPresent(metaCoupons::add);
+                            testCouponRepository.findById(id).ifPresent(testCoupons::add);
                         } else {
                             notExistIds.add(id);
                         }
                     }
              
                     if (!notExistIds.isEmpty()) {
-                        metaCoupons.addAll(metaCouponRepository.findAllById(notExistIds));
+                        testCoupons.addAll(testCouponRepository.findAllById(notExistIds));
                     }
              
-                    return metaCoupons;
+                    return testCoupons;
                 }
             }
             
