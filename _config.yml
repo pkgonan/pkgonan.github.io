@@ -45,7 +45,7 @@ logo: '/assets/images/pkgonan-logo.png'
 shared: '/assets/cover8.jpg'
 
 # gems and other configs
-gems: [jekyll-paginate]
+gems: [jekyll-paginate, jekyll-feed, jekyll-sitemap]
 exclude: [vendor]
 
 

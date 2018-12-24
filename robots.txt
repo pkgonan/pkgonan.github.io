@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://pkgonan.github.io/sitemap.xml
