@@ -46,6 +46,9 @@ class: 'post-template'
             {% endif %}
         </section>
 
+        <!-- Add Google Adsense  -->
+        {% include adsense_body.html %}
+
         <!-- #DONE 글쓴이 메타정보 영역 출력-->
         <footer class="post-footer">
             {% for category in page.categories  %}              
@@ -73,7 +76,7 @@ class: 'post-template'
                 
             {% endfor %}
             </section>
-            <!-- /author  -->            
+            <!-- /author  -->
         </footer>
         {% if site.facebook %}
             {% include fb_comment.html %}
