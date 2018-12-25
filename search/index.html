@@ -13,6 +13,9 @@ description: Search by keyword or tag.
   </div>
 </form>
 
+<!-- Add Google Adsense  -->
+{% include adsense_body.html %}
+
 <hr style="background-color: #000; height: 5px;">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/js/light-jekyll-search.js"></script>
@@ -23,7 +26,6 @@ description: Search by keyword or tag.
         postJsonPath : '/assets/json/posts.json'
     });
 </script>
-
 
 {% for tag in site.tags %}
 <h2 id="{{ tag[0] }}">{{ tag[0] | capitalize }}</h2>
@@ -40,3 +42,6 @@ description: Search by keyword or tag.
   {% assign group = nil %}
 </ul>
 {% endfor %}
+
+<!-- Add Google Adsense  -->
+{% include adsense_body.html %}
