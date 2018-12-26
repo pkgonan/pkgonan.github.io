@@ -2,7 +2,7 @@
 layout: post
 cover: '/assets/images/cover5.jpg'
 title: Hibernate setAutoCommit 최적화를 통한 성능 튜닝
-date: 2019-01-01 00:00:00
+date: 2019-01-01 01:00:00
 tags: Java JPA Hibernate
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
@@ -16,17 +16,17 @@ navigation: True
 ## 배경
 * 현재 야놀자 쿠폰 API 서버 개발을 담당하고 있으며, APM Pinpoint를 통해 Transaction 전후로 setAutoCommit(false) & setAutoCommit(true) 쿼리를 반복 수행하는 것을 확인하였습니다.
     * ![setAutoCommit에 대한 고민](/assets/images/post/autocommit_thinking.png)
-* 각 setAutoCommit은 1~3ms가 소요됩니다.
-* 1개의 Transaction일 경우 2번 호출되어, 즉 2~6ms가 소요됩니다.
+* 분석 결과 각 setAutoCommit은 평균적으로 1~3ms가 소요되고 있었습니다.
+* 1개의 Transaction일 경우 setAutoCommit은 2번 호출되며, 수행 시간은 2~6ms가 소요됩니다.
 * `N개의 Nested Transaction일 경우 2N번 호출되어, 즉, 2N~6N ms가 소요`됩니다.
-    * 아래는 Nested Transaction인해 setAutoCommit이 2 * N 번 발생한 실제 케이스다.
+    * 아래는 Nested Transaction인해 setAutoCommit이 2 * N 번 발생한 실제 케이스입니다.
     * ![Nested Transaction에서 autoCommit 2 * N번 수행 케이스](/assets/images/post/autocommit_2N.png)
 * 3개의 Nested Transaction을 예로 들면, 비지니스 수행 시간이 아닌, setAutoCommit 작업에만 6~36ms 소요될 수 있습니다.
-* `캐시를 타서 총 6ms의 응답이 걸렸는데, setAutoCommit을 수행하는데 4ms가 걸린 어이없는 경우`도 있다.
-    * 아래가 그 실제 케이스다.
-    * 아래의 경우에는 setAutoCommit을 최적화하면 2ms 의 응답이 가능하게 된다.
+* `캐시를 타서 총 6ms의 응답이 걸렸는데, setAutoCommit을 수행하는데 4ms가 걸린 어이없는 경우`도 있습니다.
+    * 아래가 그 실제 케이스입니다.
+    * 아래의 경우에는 setAutoCommit을 최적화하면 2ms 의 응답이 가능하게 됩니다.
     * ![Nested Transaction에서 autoCommit 2 * N번 수행 케이스](/assets/images/post/autocommit_slow.png)
-* setAutoCommit은 `DB에 실제로 쿼리를 수행하기에 초당 수천건의 트랜잭션이 발생하면, DB에 부하를 줄 수 있고 API 응답시간도 느려지게 된다.`
+* setAutoCommit은 `DB에 실제로 쿼리를 수행하기에 초당 수천건의 트랜잭션이 발생하면, DB에 부하를 줄 수 있고 API 응답시간도 느려지게 됩니다.`
 * 따라서, setAutoCommit을 최적화하여 성능을 개선하고자 합니다.
 
 

@@ -17,7 +17,6 @@ navigation: True
 * 현재 야놀자 쿠폰 API 서버 개발을 담당하고 있으며, APM Newrelic을 통해 DB Query로 인한 Latency 지연이 전체 Latency의 50%정도를 차지한다는 것을 알게 되었습니다.
 * 따라서, `DB Query 조회를 제로에 가깝게 줄여 API 성능을 개선하고자 Second Level Cache를 적용`하게 되었습니다.
 * ![Latency의 절반이 DB Query](/assets/images/post/apm_status_rainbow_mochi.png)
-* ![색깔 별 의미 요약](/assets/images/post/apm_status_query.png)
 
 
 ## 환경
