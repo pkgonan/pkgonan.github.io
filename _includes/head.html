@@ -12,7 +12,7 @@
     <meta property="og:image:url" content="{{ site.url }}{% if page.url != '/' and page.cover %}{{ page.cover }}{% else %}{{ site.shared }}{% endif %}" />
     
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@devyanolja">
+    <meta name="twitter:site" content="@dev">
     <meta name="twitter:title" content="{% if page.title %}{{ page.title }} | {{site.name}}{% else %}{{site.name}} - {{site.title}}{% endif %}" />
     <meta name="twitter:description" content="{% if post.content %}{{ post.content | strip_html | truncatewords: 32 }}{% else %}{{ site.description }}{% endif %}" />
     <meta name="twitter:url" content="{{ site.url }}{{ page.url }}" />
@@ -22,9 +22,9 @@
     {
     "@context": "http://schema.org",
     "@type": "Website",
-    "publisher": "Yanolja R&D",
+    "publisher": "pkgonan",
     "url": "/",
-    "image": "{{ "/" | relative_url }}assets/images/yanolja-tumbnail.png",
+    "image": "{{ "/" | relative_url }}assets/images/post-default-cover.png",
     "description": "{% if post.content %}{{ post.content | strip_html | truncatewords: 32 }}{% else %}{{ site.description }}{% endif %}"
     }
     </script>
