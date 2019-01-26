@@ -3,7 +3,7 @@ layout: post
 cover: '/assets/images/cover2.jpg'
 title: JPA Composite Primary Key의 IN 쿼리 서술 방식 변경을 통한 DB Optimizer 인덱스 전략 튜닝
 date: 2018-11-03 00:00:00
-tags: Java JPA Hibernate MariaDB DB Index
+tags: Java JPA Hibernate MariaDB DB Index Tuning
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True

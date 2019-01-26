@@ -3,7 +3,7 @@ layout: post
 cover: '/assets/images/cover5.jpg'
 title: Hibernate setAutoCommit 최적화를 통한 성능 튜닝
 date: 2019-01-01 01:00:00
-tags: Java JPA Hibernate
+tags: Java JPA Hibernate Tuning
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True

@@ -5,9 +5,15 @@
 
 환경 설정
 1. Docker
-```bash
-docker pull jekyll/jekyll
-```
+- docker jekyll 이미지 다운로드
+  ```bash
+  docker pull jekyll/jekyll
+  ```
+
+- docker 이미지 다운로드 현황
+  ```bash
+  docker images
+  ```
 
 
 2. 실행
