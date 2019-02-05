@@ -14,7 +14,9 @@ navigation: True
 
 
 ## 배경
-* 담당하고 있는 서비스의 Production DB Migration
+* 전체 시스템 구조를 MSA 환경으로 전환
+* 이에 따라 담당하고 있는 서비스의 Production DB 분리 필요
+* 이를 위해 AWS Aurora DB로 Migration
 
 
 ## 환경
