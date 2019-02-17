@@ -14,7 +14,7 @@ navigation: True
 
 
 ## 배경
-* 현재 야놀자 쿠폰 API 서버 개발을 담당하고 있으며, APM Newrelic을 통해 DB Query로 인한 Latency 지연이 전체 Latency의 50%정도를 차지한다는 것을 알게 되었습니다.
+* 현재 Y사에서 쿠폰 API 서버 개발을 담당하고 있으며, APM Newrelic을 통해 DB Query로 인한 Latency 지연이 전체 Latency의 50%정도를 차지한다는 것을 알게 되었습니다.
 * 따라서, `DB Query 조회를 제로에 가깝게 줄여 API 성능을 개선하고자 Second Level Cache를 적용`하게 되었습니다.
 * ![Latency의 절반이 DB Query](/assets/images/post/apm_status_rainbow_mochi.png)
 
@@ -25,7 +25,8 @@ navigation: True
 * Spring Data JPA 2.x
 * Hibernate 5.2.x
 * QueryDSL 4.2.x
-* Hazelcast 3.10.x
+* Hazelcast 3.11.x
+* hazelcast-hibernate52 1.3.x
 * AWS Elastic Beanstalk
 
 
@@ -414,3 +415,7 @@ navigation: True
 * 어플리케이션의 어떤 부분이 성능에 영향을 미치는지 현 상황을 분석하기 위해서는 APM이 필요하며, 이를 통해 개선포인트를 찾을 수 있는 Insight를 얻을 수 있기 때문입니다.
 * 모든 것은 Trade Off, 분산 환경에서 Second Level Cache는 Strong Consistency를 지킬 수 없습니다.
 * 사용하려는 서비스의 특징 그리고 읽기/쓰기의 비율이 읽기가 많은지, 데이터 수정으로 인해 크리티컬한 이슈가 발생하지 않는 데이터인지를 잘 고려하여 사용하면 극적인 퍼포먼스를 내는 좋은 솔루션이 될 수 있을 것 같습니다.
+
+
+## 관련 Post
+* [Hazelcast를 구현체로 Hibernate Second Level Cache 적용하여 성능 튜닝 후 Trouble Shooting](https://pkgonan.github.io/2019/03/hazelcast-hibernate-second-level-cache-troubleshooting)

@@ -14,7 +14,7 @@ navigation: True
 
 
 ## 배경
-* 현재 야놀자 쿠폰 API 서버 개발을 담당하고 있으며, 최근 API 서버의 P99 Latency가 급격하게 느려진 것을 확인하였습니다.
+* 현재 Y사에서 쿠폰 API 서버 개발을 담당하고 있으며, 최근 API 서버의 P99 Latency가 급격하게 느려진 것을 확인하였습니다.
 * APM Pinpoint에서 확인 결과, Composite Primary Key를 사용하는 특정 API의 쿼리 수행시간이 느려 진 것을 알게 되었습니다.
 * 분석 결과, JPA에서 Composite Primary Key를 통해 IN Query를 사용하게 될 경우 아래와 같은 쿼리가 발생하고 있었습니다.
 
@@ -51,7 +51,7 @@ navigation: True
 * Spring Data JPA 2.x
 * Hibernate 5.2.x
 * QueryDSL 4.2.x
-* Hazelcast 3.10.x
+* Hazelcast 3.11.x
 * MariaDB 10.0.x (InnoDB-5.6.x)
 * AWS Elastic Beanstalk
 
