@@ -10,7 +10,7 @@ navigation: True
 ---
 
 ## 목적
-* [Hazelcast를 구현체로 Hibernate Second Level Cache를 적용하여 성능 튜닝](https://pkgonan.github.io/2018/10/hazelcast-hibernate-second-level-cache) 이후 발생했던 Eventually Consistency로 인한 데이터 불일치 이슈의 해결.
+* [Hazelcast를 구현체로 Hibernate Second Level Cache를 적용하여 성능 튜닝](https://pkgonan.github.io/2018/10/hazelcast-hibernate-second-level-cache) 이후 발생했던 Eventual Consistency로 인한 데이터 불일치 이슈의 해결.
 
 
 ## 배경
@@ -59,7 +59,7 @@ navigation: True
 * Lock
 * Cache Concurrency Strategy
 * Strong Consistency
-* Eventually Consistency
+* Eventual Consistency
 
 
 ## 해결 방안의 분석
@@ -161,9 +161,9 @@ navigation: True
 * Query Hint를 통한 Cache Ignore 기법
     * Hibernate Second Level Cache 사용시 기본적으로 캐시를 사용하여 데이터를 가져오고 없으면 DB에 접근하여 가져오게 됩니다.
     * Query Hint를 사용하게 되면, 데이터를 Cache에서 참조할지, DB에서 참조해서 가져올지를 선택할 수 있습니다.
-    * `애초에 Local Cache + Eviction Message Propagation 전략을 선택했다는 점에서 Strong Consistency가 아닌 Eventually Consistency를 제공하는 것을 의미합니다.`
-    * 대부분의 트래픽이 `조회`이기에 Eventually Consistency는 문제 되지 않기 때문이죠.
-    * 하지만, `변경` 요청이 빠르게 여러번 들어올 경우에는 Eventually Consistency는 취약합니다.
+    * `애초에 Local Cache + Eviction Message Propagation 전략을 선택했다는 점에서 Strong Consistency가 아닌 Eventual Consistency를 제공하는 것을 의미합니다.`
+    * 대부분의 트래픽이 `조회`이기에 Eventual Consistency는 문제 되지 않기 때문이죠.
+    * 하지만, `변경` 요청이 빠르게 여러번 들어올 경우에는 Eventual Consistency는 취약합니다.
     * `따라서, 변경 API에 대해서는 Query Hint를 통해 Cache를 사용하지 않고 DB를 직접 바라보도록 메소드를 제공하여 이를 해결할 수 있었습니다.`
     * 이러한 방식은 Lock을 걸지 않기에 대용량 트래픽 환경에서 성능 저하 및 Lock으로 인한 장애가 발생하지 않습니다.
     * 아래는 Spring-Data-Jpa 환경에서 구현한 소스코드 예시입니다.
@@ -218,8 +218,8 @@ navigation: True
 
 ## 마치며
 * Redis 같은 Write Endpoint가 한 곳인 Cache는 Cache Eviction Propagation Timing에 대해서는 크게 고려하지 않아도 된다.
-* 위와 같은 Local Cache + Cache Eviction Propagation 전략을 사용할 경우에는 Eventually Consistency에 대해 반드시 고려해야 할 것이다.
-* Strong Consistency & Eventually Consistency에 대해 다시 한번 생각해보는 좋은 계기가 된것 같다.
+* 위와 같은 Local Cache + Cache Eviction Propagation 전략을 사용할 경우에는 Eventual Consistency에 대해 반드시 고려해야 할 것이다.
+* Strong Consistency & Eventual Consistency에 대해 다시 한번 생각해보는 좋은 계기가 된것 같다.
 * 그리고 분산 환경에서의 동시성 전략에 대해서도 고민해보는 좋은 시간이 되었던 것 같다.
 
 
