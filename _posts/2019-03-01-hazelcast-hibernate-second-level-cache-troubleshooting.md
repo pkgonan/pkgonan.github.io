@@ -212,7 +212,7 @@ navigation: True
 * Cache Concurrency Strategy는 `부적합`
     * Local Cache 구현체([hazelcast-hibernate](https://github.com/hazelcast/hazelcast-hibernate5))에서는 Cache Concurrency Strategy 별 Lock이 구현되어 있지 않음
 * Query Hint를 통한 Cache Ignore는 `적합`
-    * Cache가 아닌 원본 데이터인 DB를 참조하여 동시성 이슈 해결
+    * Cache가 아닌 원본 데이터인 DB를 참조하여 Local Cache와 Local Cache 간의 동시성 이슈 해결(정확하게는 회피)
     * Lock을 사용하지 않아 대용량 트래픽 환경에서 성능 저하 없음
         
 

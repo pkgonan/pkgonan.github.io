@@ -248,7 +248,7 @@ navigation: True
 * 캐시를 담을 Map 설정
     * Cache Map Size
         * 각 Entity 별 차등을 두어 적용하였습니다.
-        * 야놀자 서비스의 특성상 여름 성수기의 쿠폰 사용이 많은 편이라 여름 성수기 기준으로 설정을 하였습니다.
+        * 운영중인 서비스의 특성상 여름 성수기의 쿠폰 사용이 많은 편이라 여름 성수기 기준으로 설정을 하였습니다.
     * Cache Eviction Strategy
         * `LRU`
     * Cache Eviction Interval
