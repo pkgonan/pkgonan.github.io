@@ -18,7 +18,7 @@ navigation: True
 * Local Cache의 단점은, Cache의 상태가 변경 되었을 때 변경 사항을 다른 인스턴스가 모른다는게 가장 큰 단점입니다.
 * 따라서, 이러한 단점을 극복하고 장점인 성능을 취하기 위해 Hazelcast가 제공하는 Cache Eviction Message를 다른 인스턴스에 Propagation하는 전략을 사용하게 되었습니다.
 * 그런데 만약, `Cache Eviction Message가 전파되기도 전에 다른 수정 요청이 인입된다면 어떤 문제가 발생할까요 ?`
-* 동시성 문제로 인해 의도하지 않는 결과가 발생할 수 있습니다.
+* Local Cache간의 동시성 문제로 인해 의도하지 않는 결과가 발생할 수 있습니다.
 * N대의 서버를 기준으로 Cache Eviction Message가 전파되는 방식은 아래와 같습니다.
 * ![예시](/assets/images/post/Hazelcast_Local_Map_Invalidation.png)
 * 아래의 이미지를 기준으로 예를 들어 동시성 문제를 설명해보겠습니다.
@@ -33,7 +33,12 @@ navigation: True
 * `따라서, 캐시를 깨지 않은 상황이기에 캐시된 Entity를 가져오게 되면 2,3이 제거되지 않은 1,2,3을 가져오게 됩니다.`
 * 따라서, 4,5를 추가하여 DB에 저장하게 되면 DB에는 1,2,3,4,5가 저장되게 됩니다.
 * `기대했던 결과는 1,4,5가 DB에 저장되기를 바랬는데, 의도와 다르게 실제로는 1,2,3,4,5가 DB에 저장되어버립니다.`
-* 이러한 동시성 문제를 어떤 방식을 사용하여 해결하였는지 공유합니다.
+* 이러한 Local Cache 간의 동시성 문제를 어떤 방식을 사용하여 해결하였는지 공유합니다.
+
+
+## 이슈의 핵심을 정리하면 ?
+* `해당 Post에서 해결하려는 부분은 중복 Request간의 동시성 이슈가 아닙니다.`
+* `N대의 인스턴스에 각각 존재하는 Local Cache 간의 Invalidation Message Propagation Timing으로 인한 동시성 이슈를 해결하는게 목적입니다.`
 
 
 ## 환경
