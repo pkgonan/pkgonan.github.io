@@ -14,7 +14,7 @@ navigation: True
 
 
 ## 배경
-* 현재 Y사에서 쿠폰 API 서버 개발을 담당하고 있으며, APM Pinpoint를 통해 Transaction 전후로 setAutoCommit(false) & setAutoCommit(true) 쿼리를 반복 수행하는 것을 확인하였습니다.
+* 야놀자 쿠폰 API 서버 개발을 담당하고 있으며, APM Pinpoint를 통해 Transaction 전후로 setAutoCommit(false) & setAutoCommit(true) 쿼리를 반복 수행하는 것을 확인하였습니다.
     * ![setAutoCommit에 대한 고민](/assets/images/post/autocommit_thinking.png)
 * 분석 결과 각 setAutoCommit은 평균적으로 1~3ms가 소요되고 있었습니다.
 * 1개의 Transaction일 경우 setAutoCommit은 2번 호출되며, 수행 시간은 2~6ms가 소요됩니다.
