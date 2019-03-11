@@ -379,3 +379,7 @@ navigation: True
 * 당연하게도, 사용 빈도가 높은 작업일 경우 튜닝의 효과가 매우 크다.
 * JDBC Driver 설정 튜닝이라던지.. 개선 전후의 TPS가 천단위로 차이가 날 때도 많다...
 * 결론은, 하나의 설정을 적용하더라도 내부 구현체를 열어보고 반드시 동작 방식을 분석하고 사용해야 할 것이다.
+
+
+## 관련 Post
+* [해당 Hibernate 성능 튜닝 Post가 2019-01 Hibernate Community Newsletter에 소개되었습니다.](http://in.relation.to/2019/01/07/hibernate-community-newsletter-2019-01)
