@@ -1,22 +1,74 @@
 ---
 layout: post
 cover: '/assets/images/cover10.jpg'
-title: Hazelcast를 구현체로 Hibernate Second Level Cache를 적용하여 API 성능 튜닝하기
+title: Local Cache 와 Invalidation Message Propagation 전략을 활용하여 API 성능 튜닝하기
 date: 2018-10-28 00:00:00
-tags: Java AWS Beanstalk Hazelcast Hibernate Second-Level-Cache Tuning
+tags: Java AWS Beanstalk Hazelcast Hibernate Second-Level-Cache Local-Cache Invalidation Tuning
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True
 ---
 
 ## 목적
-* Hazelcast를 구현체로 Hibernate Second Level Cache를 적용하여 쿠폰 API 성능 튜닝
+* Local Cache 와 Invalidation Message Propagation 전략을 활용하여 API 성능 튜닝하기
 
 
 ## 배경
 * 야놀자 쿠폰 API 서버 개발을 담당하고 있으며, APM Newrelic을 통해 DB Query로 인한 Latency 지연이 전체 Latency의 50%정도를 차지한다는 것을 알게 되었습니다.
-* 따라서, `DB Query 조회를 제로에 가깝게 줄여 API 성능을 개선하고자 Second Level Cache를 적용`하게 되었습니다.
+* 따라서, `DB Query 조회를 제로에 가깝게 줄여 API 성능을 개선하고자 Cache를 적용`하게 되었습니다.
 * ![Latency의 절반이 DB Query](/assets/images/post/apm_status_rainbow_mochi.png)
+
+
+## 분석
+* 현재 쿠폰 도메인의 Entity 사용 패턴을 분석해보았습니다.
+* 쿠폰의 메타 데이터 성격의 Entity는 조회가 99.9% 이상으로 압도적으로 많았습니다.
+* 이러한 쿠폰 메타 Entity를 전체 트래픽의 95%를 차지하는 상위 3개의 API에서 다수 호출하는 구조였습니다.
+* `따라서, 캐시에 아주 적합한 성격의 Entity라고 판단되었습니다.`
+
+
+## Cache를 어떻게 적용할 것인가 ?
+* 현재 Hibernate를 ORM으로 사용하고 있습니다.
+* 각 API Call 마다 Entity를 중복 조회하고 있었기에, 각 세션 내부에서만 Cache를 공유하는 First Level Cache는 Hit율이 낮은 편이었습니다.
+* 만약, 여러 세션에서 Cache를 공유하는 Second Level Cache를 적용할 경우 First Level Cache에서 Miss되는 조회들을 Hit 시킬 수 있게 됩니다.
+* `따라서, 현재 조회 패턴에서 Cache Hit율을 올리기 위해 Hibernate Second Level Cache를 적용하게 되었습니다.`
+
+
+## Local Cache vs Remote Cache 어떤 것이 더 적합한 상황인가 ?
+* `쿠폰 메타 Entity에 대해 1초에 수 천번의 극단적인 중복 조회가 이루어지는 상황이었습니다.`
+* 따라서, `성능 측면에서는 매번 Network를 타는 Remote Cache 보다 Local Cache가 가장 적합한 상황이었습니다.`
+* 하지만, Local Cache의 단점은 Entity의 상태가 변경 되었을 때 변경 사항을 다른 인스턴스가 알 수 없다는 것입니다.
+* 변경사항을 다른 인스턴스에게 알려주는 솔루션이 없다면 Remote Cache, 있다면 Local Cache 적용을 고려하였습니다.
+* 그리고 IMDG로 설계된 Cache 구현체에서 Entity의 상태가 변경되었을때 변경사항을 다른 인스턴스에게 전파하는 기능을 제공하는 것을 확인하게 되었습니다.
+* 이에 따라, `극단적인 중복 조회 패턴에서의 퍼포먼스를 위해 Local Cache 적용을 확정하게 되었습니다.`
+
+
+## Cache Concurrency Strategy은 어떤 전략이 적합한가 ?
+* 현재 Hibernate를 사용하고 있으며, Second Level Cache 적용을 위해 캐시 동시성 전략에 대한 고민이 필요하였습니다.
+* Read/Update 비율이 Read가 압도적으로 높고, 동시 수정이 일어날 확률이 낮은 상황이었습니다.
+* 또한, `Eventual Consistency에 큰 이슈가 없으며 퍼포먼스가 필요하였기에, NONSTRICT_READ_WRITE 전략이 적합하였습니다.`
+
+
+## Cache 구현체의 선택
+* Invalidation Message Propagation 기능을 제공하는 Cache 구현체가 필요하였습니다.
+* 위와 같은 조건을 기준으로 Cache 구현체 별 적합성에 대해 분석을 해보았습니다. 성능에 대한 차이는 분석에서 제외하였습니다.
+* 
+| 이름 | 구분 | 저장소 | 적합여부 | 판단사유 |
+|---------|---------|---------|---------|---------|
+| Hazelcast | IMDG | In Memory | O | IMDG로 Invalidation Message Propagation 기능 제공 |
+| Infinispan | IMDG | In Memory | O | 상동 |
+| Redis | NON-IMDG | In Memory | X | NON-IMDG로 Invalidation Message Propagation 기능 미제공 |
+| Ehcache | NON-IMDG | In Memory | X | 상동 |
+| Ehcache + Terracotta | NON-IMDG | In Memory | X | Terracotta 서버 추가 구성으로 인한 부담 |
+* 위 분석을 통해 IMDG에서 분산 메세지 기능을 구현하고 있어, IMDG를 활용해야 한다는 것을 알게 되었습니다.
+* 하지만, `Infinispan같은 경우 9.4.9.Final Version 기준으로 Invalidation Mode에서 NONSTRICT_READ_WRITE 전략을 지원하지 않았습니다.`
+* 이에 따라, `NONSTRICT_READ_WRITE 전략을 지원하는 Hazelcast를 Local Cache 구현체로 선택하게 되었습니다.`
+
+
+## 그래서 Local Cache + Invalidation Message Propagation 전략은 언제 써야 적절한건데 ? (AND 조건)
+* 특정 Entity에 대해 조회가 극단적으로 많을 경우
+* 극단적인 성능이 필요할 경우
+* 조회/수정 비율이 조회가 더 많을 경우 (쿠폰은 약 99.9%/0.1%)
+* Eventual Consistency에도 이슈 없는 Entity 속성일 경우
 
 
 ## 환경
@@ -114,7 +166,7 @@ navigation: True
         * 장점으로는 여러대의 Instance에 중복된 데이터가 저장되지 않는다.
         * 단점으로는 데이터를 적재하고 가져올때 Network Time이 발생한다.
         * 당연하게도 Read / Update 비율이 Read 가 많아야지 Update가 많으면 비효율.
-        * `Cache Eviction은 데이터가 변경 & Eviction 되었을 때 Multicasting을 통해 타 인스턴스에 Eviction 요청을 전달`한다.
+        * `Cache 데이터가 변경 되었을 때 Multicasting을 통해 타 인스턴스에 Invalidation 요청을 전달`한다.
         * ![Hazelcast 분산 처리 방식의 Put](/assets/images/post/Hazelcast_Distributed_Map_Put.png)
         * ![Hazelcast 분산 처리 방식의 Get](/assets/images/post/Hazelcast_Distributed_Map_Get.png)
     * Local 처리 방식 (HazelcastLocalCacheRegionFactory)
@@ -122,8 +174,8 @@ navigation: True
         * 장점으로는 Local에서 데이터를 가져오고 적재하기 때문에 Network Time이 발생하지 않아 빠르다.
         * 단점으로는 여러대의 Instance에 중복되는 데이터가 발생한다.
         * 당연하게도 Read / Update 비율이 Read 가 많아야지 Update가 많으면 비효율.
-        * `Cache Eviction은 데이터가 변경 & Eviction 되었을 때 Multicasting을 통해 타 인스턴스에 Eviction 요청을 전달`한다.
-        * ![Hazelcast 로컬 처리 방식의 Invalidation](/assets/images/post/Hazelcast_Local_Map_Invalidation.png)
+        * `Cache 데이터가 변경 되었을 때 Multicasting을 통해 타 인스턴스에 Invalidation 요청을 전달`한다.
+        * ![Hazelcast Local_Cache의 Invalidation](/assets/images/post/Hazelcast_Local_Map_Invalidation.png)
 * Coupon API의 Hazelcast Second Level Cache 데이터 적재 방식의 결정
     * 데이터 적재 방식의 결정을 위해서 고려한 부분은 크게 두 가지 였습니다.
     * 성능 그리고 AWS Beanstalk 환경에서의 배포 이슈 여부
@@ -141,7 +193,7 @@ navigation: True
 
 ## Hazelcast 분산 이벤트
 * Hazelcast 분산 이벤트 사용처는 ?
-    * `Cache 대상이 되는 데이터가 Update & Eviction이 될 경우, 상태가 변경이 되었다는 Event를 클러스터링 된 다른 인스턴스에 Propagation(Multicast) 하는데 사용`됩니다.
+    * `Cache 대상이 되는 데이터가 Update 될 경우, 상태가 변경이 되었다는 Event를 클러스터링 된 다른 인스턴스에 Propagation(Multicast) 하는데 사용`됩니다.
     * 이벤트 리스너에서는, 이벤트 수신시 해당 캐시를 Eviction 할 것인지, 아니면 Update할 것인지 설정을 통해 선택 가능.
     * 컬럼이 추가 혹은 삭제될 경우 등등 여러가지 Serialization 이슈가 존재.
     * 따라서, 이벤트를 수신하면 해당 이벤트에 해당하는 Cache를 Eviction 할 것을 개인적으로 추천.
@@ -184,7 +236,7 @@ navigation: True
     * 데이터 전송 실패를 처리하는 방식
         * `전송 실패 처리 방식에서의 데이터 신뢰도와 성능은 반비례`
         * ![Failure_Handling](/assets/images/post/Failure_Handling.png)
-        * `Hazelcast에서 Local Cache + Eviction Multicasting 방식에서는 Retry 정책을 사용`
+        * `Hazelcast에서 Local Cache + Invalidation Message Multicasting 방식에서는 Retry 정책을 사용`
             * 동기식 전송일 경우 재시도 회수 50
             * 비동기식 전송일 경우 재시도 회수 5
             
@@ -223,15 +275,15 @@ navigation: True
                     }
                     
                     
-* 분산 메세징을 통한 Cache Eviction Propagation 방식의 신뢰성 분석
-    * 인스턴스간의 Cache Eviction Message Propagation 도달 시간 차이로 인한 신뢰성 문제에 대하여
+* 분산 메세징을 통한 Cache Invalidation Message Propagation 방식의 신뢰성 분석
+    * 인스턴스간의 Cache Invalidation Message Propagation 도달 시간 차이로 인한 신뢰성 문제에 대하여
         * `당연하게도 미세한 시간 차이가 존재, 그 시간 사이에서는 Consistency를 보장 불가`
         * 데이터 원본이 한곳에 저장되는 방식이라면 Consistency 보장 가능
         * 쿠폰에서는 데이터를 각자 Local에 저장하는 방식을 사용, 미세한 Consistency 이슈 존재
         * `즉, 변경이 적은 데이터를 캐시해야 하며, 변경으로 인해 크리티컬한 이슈가 발생하지 않는 데이터를 적재해야 할 것`
         * 쿠폰 API에서는 데이터가 변경되어도 그 영향이 적은 Entity들을 캐싱
         * 따라서, 쿠폰 API에서는 Propagation 시간 차이로 인한 Consistency 이슈 없음
-    * 네트워크 혹은 서버상의 이슈로 Cache Eviction Message를 받지 못해 생길 수 있는 Consistency 문제에 대하여
+    * 네트워크 혹은 서버상의 이슈로 Cache Invalidation Message를 받지 못해 생길 수 있는 Consistency 문제에 대하여
         * 네트워크 상의 통신 문제로 인한 문제
             * `TCP 전송방식을 사용, 패킷 유실 등은 프로토콜에서 재처리`, 이슈 없음
         * 동작중인 서버가 OOM 등에 의해 정지한 경우
@@ -413,9 +465,10 @@ navigation: True
 * 캐시 적용 전후, APM에서 Latency 그래프가 극단적으로 깎여 나가는 것을 보면 쾌감이 상당합니다...
 * 성능 튜닝의 시작은 APM인 것 같습니다.
 * 어플리케이션의 어떤 부분이 성능에 영향을 미치는지 현 상황을 분석하기 위해서는 APM이 필요하며, 이를 통해 개선포인트를 찾을 수 있는 Insight를 얻을 수 있기 때문입니다.
-* 모든 것은 Trade Off, 분산 환경에서 Second Level Cache는 Strong Consistency를 지킬 수 없습니다.
+* 모든 것은 Trade Off, 분산 환경에서 Local Cache는 성능과 Strong Consistency를 함께 지킬 수 없습니다.
 * 사용하려는 서비스의 특징 그리고 읽기/쓰기의 비율이 읽기가 많은지, 데이터 수정으로 인해 크리티컬한 이슈가 발생하지 않는 데이터인지를 잘 고려하여 사용하면 극적인 퍼포먼스를 내는 좋은 솔루션이 될 수 있을 것 같습니다.
+* Local Cache로 인한 성능 극대화와 Heap의 압박을 함께 고려하여 장점이 단점보다 클 경우에 사용할 것을 추천합니다.
 
 
 ## 관련 Post
-* [Hazelcast를 구현체로 Hibernate Second Level Cache 적용하여 성능 튜닝 후 Trouble Shooting](https://pkgonan.github.io/2019/03/hazelcast-hibernate-second-level-cache-troubleshooting)
+* [Local Cache 와 Invalidation Message Propagation 전략을 활용하여 API 성능 튜닝 후 Trouble Shooting](https://pkgonan.github.io/2019/03/hazelcast-hibernate-second-level-cache-troubleshooting)
