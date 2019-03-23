@@ -45,7 +45,7 @@ navigation: True
 ## Cache Concurrency Strategy은 어떤 전략이 적합한가 ?
 * 현재 Hibernate를 사용하고 있으며, Second Level Cache 적용을 위해 캐시 동시성 전략에 대한 고민이 필요하였습니다.
 * Read/Update 비율이 Read가 압도적으로 높고, 동시 수정이 일어날 확률이 낮은 상황이었습니다.
-* 또한, `Eventual Consistency에 큰 이슈가 없으며 퍼포먼스가 필요하였기에, NONSTRICT_READ_WRITE 전략이 적합하였습니다.`
+* 따라서, `Lock으로 인한 성능 저하가 없는 NONSTRICT_READ_WRITE 전략이 적합하였습니다.`
 
 
 ## Cache 구현체의 선택
