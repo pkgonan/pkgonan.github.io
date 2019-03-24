@@ -356,7 +356,7 @@ navigation: True
 
 ## 적용 결과
 * 결과 요약
-    * setAutoCommit 최적화로 `쿠폰 전체 API에 대해 평균적으로 143%의 성능 개선`
+    * setAutoCommit 최적화로 `쿠폰 전체 API에 대해 평균적으로 43%의 성능 향상`
 * API 별 분석
     * ![setAutoCommit 튜닝 전 후 종합 결과](/assets/images/post/autocommit_total_result_table.png)
 * 결과 이미지
