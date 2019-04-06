@@ -1,7 +1,7 @@
 ---
 layout: post
 cover: '/assets/images/cover3.jpg'
-title: Java JVM Heap Space Out Of Memory Error Trouble Shooting
+title: Java JVM Heap Space Out Of Memory Error Trouble-Shooting
 date: 2019-03-03 00:00:00
 tags: Java JVM Trouble-Shooting
 subclass: 'post tag-dev'
