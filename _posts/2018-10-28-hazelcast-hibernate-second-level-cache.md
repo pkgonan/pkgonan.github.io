@@ -471,4 +471,6 @@ navigation: True
 
 
 ## 관련 Post
+* [2019 Spring Camp 발표](https://www.springcamp.io/2019/)
+* [2019 Spring Camp 발표 자료](https://github.com/pkgonan/spring-camp/tree/master/2019)
 * [Local Cache 와 Invalidation Message Propagation 전략을 활용하여 API 성능 튜닝 후 Trouble Shooting](https://pkgonan.github.io/2019/03/hazelcast-hibernate-second-level-cache-troubleshooting)
