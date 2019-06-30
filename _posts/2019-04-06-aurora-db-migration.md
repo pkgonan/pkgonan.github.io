@@ -64,3 +64,7 @@ navigation: True
 * 사실.. 서비스 점검을 하루동안 걸 수 는 없었기에 Replication 방식으로 Aurora 5.6으로 가는 걸 확정했었다.
 * 이후에 다행히 `돌다리`라는 좋은 아이디어가 떠올라서 Aurora 5.7로 Migration 할 수 있었다.
 * 작은 아이디어 하나가 큰 도움이 되었던 것 같다.
+
+
+## 관련 Post
+* [해당 Aurora DB Migration Post가 2019-04 AWS에 소개되었습니다.](https://aws.amazon.com/ko/blogs/korea/week-in-review-08-04-19/)
