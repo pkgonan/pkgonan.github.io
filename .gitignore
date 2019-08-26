@@ -1,3 +1,4 @@
 # build 폴더 제외
 _site/
+.idea/*
 *.iml
