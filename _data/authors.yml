@@ -22,7 +22,7 @@ master: #마스터유저
   # short_url: 'devalias.net'
   github: 'http://github.com/pkgonan'
   # twitter: 'http://twitter.com'
-  linkedin: 'https://www.linkedin.com/in/민규-김-267655118'
+  linkedin: 'https://www.linkedin.com/in/pkgonan'
   facebook: 'https://www.facebook.com/pkgonan'
 
 pkgonan:
@@ -32,5 +32,5 @@ pkgonan:
   position: '서버 개발자'
   image: '/assets/images/authors/pkgonan.jpg'
   github: 'http://github.com/pkgonan'
-  linkedin: 'https://www.linkedin.com/in/민규-김-267655118'
+  linkedin: 'https://www.linkedin.com/in/pkgonan'
   facebook: 'https://www.facebook.com/pkgonan'
