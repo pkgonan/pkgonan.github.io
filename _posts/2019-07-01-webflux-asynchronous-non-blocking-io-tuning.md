@@ -3,7 +3,7 @@ layout: post
 cover: '/assets/images/cover8.jpg'
 title: WebFlux로 Asynchronous & Non-blocking I/O 전환하여 API 성능 튜닝하기
 date: 2019-06-01 00:00:00
-tags: WebFlux WebClient Reactor Reactor-Cache Tuning
+tags: WebFlux WebClient Reactor Reactor-Cache Asynchronous Tuning
 subclass: 'post tag-dev'
 categories: 'pkgonan' 
 navigation: True
