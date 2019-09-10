@@ -382,4 +382,4 @@ navigation: True
 
 
 ## 관련 Post
-* [해당 Hibernate 성능 튜닝 Post가 2019-01 Hibernate Community Newsletter에 소개되었습니다.](http://in.relation.to/2019/01/07/hibernate-community-newsletter-2019-01)
+* [해당 Hibernate 성능 튜닝 Post가 2019-01 Hibernate Community Newsletter에 소개되었습니다.](https://in.relation.to/2019/01/07/hibernate-community-newsletter-2019-01/)

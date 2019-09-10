@@ -1,7 +1,7 @@
 ---
 layout: post
 cover: '/assets/images/cover5.jpg'
-title: How to append kafka topic listener at runtime
+title: How to add new kafka topic listener at runtime
 date: 2019-09-10 00:00:00
 tags: Kafka platform
 subclass: 'post tag-dev'
@@ -23,7 +23,7 @@ navigation: True
 
 
 ## 결과
-> Runtime에 new kafka topic을 append, remove, start, stop 기능 개발 완료
+> Runtime에 new kafka topic을 add, remove, start, stop 기능 개발 완료
 
 
 ## Github
