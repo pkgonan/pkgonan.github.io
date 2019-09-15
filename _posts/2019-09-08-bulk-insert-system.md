@@ -78,7 +78,7 @@ navigation: True
 
 ## 도메인 - Writer
 * 쿠폰 지급 행위를 수행할 Writer.
-    * write(T) - T에게 쿠폰을 지급한다.
+    * write(Stream<T>) - Stream<T>에게 쿠폰을 지급한다.
     * WebClientWriter는 WebClient를 활용하여 비동기 및 동기 스펙으로 API 호출이 가능한 Writer이다.
 * ![쿠폰 Writer](/assets/images/post/Domain-Writer.png)
 
