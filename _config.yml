@@ -18,6 +18,8 @@ collections:
 #highlighter: pygments
 markdown: kramdown
 highlighter: rouge
+kramdown:
+  parse_block_html: true
 paginate: 5
 language: 'ko-KR'
 
@@ -45,7 +47,7 @@ logo: '/assets/images/pkgonan-logo.png'
 shared: '/assets/cover8.jpg'
 
 # gems and other configs
-gems: [jekyll-paginate, jekyll-feed, jekyll-sitemap]
+plugins: [jekyll-paginate, jekyll-feed, jekyll-sitemap]
 exclude: [vendor]
 
 
